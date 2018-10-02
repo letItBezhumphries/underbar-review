@@ -194,12 +194,25 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    iterator = iterator || _.identity;
+    if (collection.length === 0) {
+      return true;
+    }
+    return _.reduce(collection, function(isTrue, item) {
+      return isTrue && !!(iterator(item));
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
+    if (collection.length === 0) {
+      return false;
+    }
+    iterator = iterator || _.identity;
+    return !(_.every(collection, function(item) {
+      return !iterator(item);
+    }));
   };
 
 
@@ -222,11 +235,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    //loop over the arguments starting from the index 1
+    for (let i = 1; i < arguments.length; i++) {
+      for (let key in arguments[i]) {
+        obj[key] = arguments[i][key];
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    //loop over the arguments starting from the index 1
+    for (let i = 1; i < arguments.length; i++) {
+      for (let key in arguments[i]) {
+        if (obj[key] === undefined) {
+          obj[key] = arguments[i][key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -269,7 +298,16 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  /*-------pseudocode---------
+  //create a cache object to store invocations of func()
+    //return a function
+    //create a key to store JSONified func/arguments
+    //check if the key doesn't exist on cache, if it doesn't
+      //add the key to cache and set it equal to the results of invoking func with arguments
+  //return the existing key value pair from cache
+  */
   _.memoize = function(func) {
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -279,6 +317,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
   };
 
 
@@ -293,6 +332,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    
   };
 
 
