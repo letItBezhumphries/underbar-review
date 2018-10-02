@@ -298,7 +298,7 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  /*-------pseudocode---------
+  /*
   //create a cache object to store invocations of func()
     //return a function
     //create a key to store JSONified func/arguments
@@ -307,7 +307,14 @@
   //return the existing key value pair from cache
   */
   _.memoize = function(func) {
-
+    let cache = {};
+    return function() {
+      let key = JSON.stringify(arguments);
+      if (!cache[key]) {  
+        cache[key] = func.apply(this, arguments);
+      } 
+      return cache[key];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -317,7 +324,15 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-
+    //transform arguments into an array
+    
+    let args = Array.prototype.slice.call(arguments);
+    //create a variable to store call time arguments/ arguments after the wait parameter  
+        
+    let restArgs = args.slice(2);
+    //call setTimeout passing in an anonymous function that invokes func passing in the restArgs
+        
+    setTimeout(function() { func.apply(null, restArgs); }, wait);
   };
 
 
@@ -332,7 +347,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    
+    //create a clone of the array
   };
 
 
