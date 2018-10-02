@@ -348,6 +348,21 @@
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
     //create a clone of the array
+    let clone = array.slice();
+    //create a variable to store clone.length
+    let length = clone.length;
+    //initialize but don't declare 
+    let temp, idx;
+    //as long as there is length while loop over the clone
+    while(length > 0) {
+      //set idx to a random number from the length
+      idx = Math.floor(Math.random() * --length);
+      //set the temp variable to equal clone at the index of length
+      temp = clone[length];
+      clone[length] = clone[idx];
+      clone[idx] = temp;
+    }
+    return clone;
   };
 
 
