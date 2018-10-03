@@ -376,15 +376,52 @@
 
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
-  _.invoke = function(collection, functionOrKey, args) {
-  };
+  _.invoke = function(collection, functionOrKey, args) {  
+    return _.map(collection, function(item) {    
+      //check if typeof functionOrKey is a function
+      if (typeof functionOrKey === 'function') {
+        return functionOrKey.apply(item, args);
+      } else {
+        return item[functionOrKey]();
+      }
+    });
+  }
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-  };
+    let clone = collection.slice();
+    //check if the iterator is a function
+    if (typeof iterator === 'function') {
+      return clone.sort(function(a, b) {
+        if (iterator(a) !== iterator(b)) {
+          if (iterator(a) > iterator(b) || iterator(a) === undefined) {
+            return 1;
+          }
+          if (iterator(a) < iterator(b) || iterator(b) === undefined) {
+            return -1;
+          }
+        }
+        return iterator(a) - iterator(b);
+      });
+    }  
+    //check if the iterator is a string
+    if (typeof iterator === 'string') {
+      return clone.sort(function(a, b) {
+        if (a[iterator] !== b[iterator]) {
+          if (a[iterator] > b[iterator] || a[iterator]  === undefined) {
+            return 1;
+          }
+          if (a[iterator] < b[iterator] || b[iterator] === undefined) {
+            return -1;
+          }
+        }
+        return a[iterator] - b[iterator];
+      });
+    }  
+};
 
   // Zip together two or more arrays with elements of the same index
   // going together.
@@ -392,6 +429,20 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    //create a variable to store all the arrays
+    var args = Array.prototype.slice.call(arguments);
+
+    //create a variable that stores the width of matrix
+    let columnIdx = Object.keys(args[0]);
+    
+    //iterating over each column in the matrix
+    return _.map(columnIdx, function(item) {
+      //iterating over each row in the matrix
+      return _.map(args, function(arr) {
+        //return the row [column] mapped according to the columnIdx
+        return arr[item]; 
+      });
+    });
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -399,11 +450,25 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    result = [];
+    //iterate over each element in nestedArray
+    for(let i = 0; i < nestedArray.length; i++) {
+      //check if the element is not an object
+      if (typeof nestedArray[i] !== 'object') {
+        result.push(nestedArray[i]);
+      }
+      //check if the element is an array
+      if (Array.isArray(nestedArray[i])) {
+        result = result.concat(_.flatten(nestedArray[i]));
+      }
+    }
+    return result;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+
   };
 
   // Take the difference between one array and a number of other arrays.
