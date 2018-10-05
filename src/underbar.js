@@ -354,7 +354,7 @@
     //initialize but don't declare 
     let temp, idx;
     //as long as there is length while loop over the clone
-    while(length > 0) {
+    while (length > 0) {
       //set idx to a random number from the length
       idx = Math.floor(Math.random() * --length);
       //set the temp variable to equal clone at the index of length
@@ -385,7 +385,7 @@
         return item[functionOrKey]();
       }
     });
-  }
+  };
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name
@@ -411,7 +411,7 @@
     if (typeof iterator === 'string') {
       return clone.sort(function(a, b) {
         if (a[iterator] !== b[iterator]) {
-          if (a[iterator] > b[iterator] || a[iterator]  === undefined) {
+          if (a[iterator] > b[iterator] || a[iterator] === undefined) {
             return 1;
           }
           if (a[iterator] < b[iterator] || b[iterator] === undefined) {
@@ -421,7 +421,7 @@
         return a[iterator] - b[iterator];
       });
     }  
-};
+  };
 
   // Zip together two or more arrays with elements of the same index
   // going together.
@@ -432,10 +432,11 @@
     //create a variable to store all the arrays
     var args = Array.prototype.slice.call(arguments);
 
-    //create a variable that stores the width of matrix
+    //create an array that will store the width of matrix and the column indexes
     let columnIdx = Object.keys(args[0]);
     
     //iterating over each column in the matrix
+    //map items for each column index into an array
     return _.map(columnIdx, function(item) {
       //iterating over each row in the matrix
       return _.map(args, function(arr) {
@@ -452,7 +453,7 @@
   _.flatten = function(nestedArray, result) {
     result = [];
     //iterate over each element in nestedArray
-    for(let i = 0; i < nestedArray.length; i++) {
+    for (let i = 0; i < nestedArray.length; i++) {
       //check if the element is not an object
       if (typeof nestedArray[i] !== 'object') {
         result.push(nestedArray[i]);
@@ -467,13 +468,56 @@
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {
+  //create an array to store shared items
+  //create an array of the arguments
+  //iterate over each value in first array
+  //iterate over each array in args
+  //check if value exists in the current array
+  //if it does increment count
+  //if the count total equals args.length push the element into shared
+  //and set count back to zero
 
+  _.intersection = function() {
+    let shared = [];
+    let args = Array.prototype.slice.call(arguments);
+    
+    _.each(args[0], function(value, index) {  
+      let count = 0;
+
+      for (let i = 0; i < args.length; i++) { 
+        if (args[i].includes(value)) {
+          count = count + 1;  
+        }
+        if (count === args.length) {
+          shared.push(value);
+          count = 0;
+        }
+      }
+    });
+    return shared;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    let different = [];
+    let args = Array.prototype.slice.call(arguments);
+    let others = args.slice(1);
+  
+    _.each(args[0], function(value, index) {
+      let count = 0;
+    
+      for (let i = 0; i < others.length; i++) {
+        if (!others[i].includes(value)) {
+          count = count + 1;
+        }
+        if (count === others.length) {
+          different.push(value);
+          count = 0;
+        }
+      }
+    });
+    return different;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -482,5 +526,11 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+  
+    //return function() {
+    //create a variable that stores boolean relating to whether its already been called once
   };
-}());
+
+
+}
+());
